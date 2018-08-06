@@ -1,6 +1,7 @@
 package com.epic.endpoints;
 
 import com.epic.controllers.AuthController;
+import com.epic.core.RequestMediator;
 import com.epic.util.JsonHandler;
 
 import javax.inject.Inject;
@@ -17,11 +18,13 @@ public class UserEndpoint {
     @Inject
     AuthController authController;
 
+    @Inject
+    RequestMediator requestMediator;
+
     @POST
     @Path("auth")
-    public Response authenticate(String data){
+    public Response authenticate(String data) {
         final JsonObject jsonObject = JsonHandler.toJsonObject(data);
-        final Response.ResponseBuilder responseBuilder = authController.authenticate(jsonObject);
-        return responseBuilder.build();
+        return requestMediator.handleRequest(jsonObject, AuthController.Commands.LOGIN);
     }
 }
